@@ -95,7 +95,7 @@ public class Main {
         list.add(1);
         list.add(1);
         System.out.println(Collections.frequency(list,1));
-
+   
 
         //VECTORS
         /*
@@ -225,7 +225,7 @@ public class Main {
      //  2. => Karakter Akımları = char char okuyarak gider
 
      //FILES
-     File file = new File("patika.txt");
+ /*    File file = new File("patika.txt");
 
      try{
       boolean isCreated = file.createNewFile(); //olusturma
@@ -250,7 +250,7 @@ public class Main {
      for (String s: fileList){
       System.out.println(s);
      }
-
+*/
      //InputStream
      /*
      * InputStream sınıfı byte akışını temsil eden bir abstract sınıftır ve Java.io paketinden gelmektedir.
@@ -267,7 +267,7 @@ public class Main {
      * FileInputStream input = new FileInputStream(stringPath); Dosya Yolu kullanma
      * FileInputStream input = new FileInputStream(stringPath); Nesne kullanma
      * */
-
+/*
      try { FileInputStream input = new FileInputStream("input.txt");
       // available () => Kullanılabilir bayt sayısını verir System.out.println("Kullanılabilir bayt sayısı : " + input.available());
       // 5 byte atlanacaktır input.skip(5); System.out.println("5 bytelık veri atlandı : ");
@@ -286,7 +286,7 @@ public class Main {
      catch (Exception e) {
           e.getStackTrace();
        }
-
+*/
 
      //FileOutputStream
      /*
@@ -312,7 +312,7 @@ public class Main {
      /*
      * byte türündeki array girdilerini okuyan bir stream sağlar.
      * */
-
+/*
      byte[] array = {1,2,3,4,54,64};
      ByteArrayInputStream inputStream = new ByteArrayInputStream(array);
      // ByteArrayInputStream inputStream = new ByteArrayInputStream(array,2,4); // 2 den basla 4 eleman getir.
@@ -328,8 +328,8 @@ public class Main {
      } catch (IOException e) {
       throw new RuntimeException(e);
      }
-
-
+*/
+/*
       //ByteArrayOutputStream
       String data = "Java 102 Lectures";
       ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -339,14 +339,14 @@ public class Main {
      } catch (IOException e) {
       throw new RuntimeException(e);
      }
-
+*/
      //Serialization
      /*
      * Bir nesneyi dosyaya atıp dosyadan okuma yaparken attıgımız nesneyi dosyadan geri okurken,
      *  nesnenin türünü bilemiyor dolayısıyla serialization kullanilir.
      * Bunlar ObjectIput ve Output Streamler ile yapılır.
      * */
-
+/*
      Car c1 = new Car("Audi","A6");
 
      //YAZMA
@@ -359,7 +359,9 @@ public class Main {
       throw new RuntimeException(e);
      }
 
+ */
 
+/*
      //OKUMA
      try {
       FileInputStream inp = new FileInputStream("car.txt");
@@ -372,7 +374,7 @@ public class Main {
       e.printStackTrace();
      }
 
-
+*/
      //BufferedInput/Output Streams
      /*
       * Dosyadan cok fazla veri okuması yapılacagı zaman;
@@ -409,12 +411,12 @@ public class Main {
       veya nesneleri yeni oluşturulan bir String nesnesine dönüştürmek için kullanılır
       */
 
-     try {
+    /* try {
       PrintStream outputPrint = new PrintStream("car.txt");
       outputPrint.print("123"+123);
      } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
-     }
+     }*/
 
      //Reader sınıfı ve InputStreamReader
      /*
@@ -427,7 +429,7 @@ public class Main {
      *  Bunun nedeni, InputStreamReader'ın giriş akışındaki baytları karakter olarak okumasıdır.
       * Giriş akımından byte okur, onları istenen charset'e dönüştürür.
       * */
-     try {
+     /*try {
       FileInputStream inputStreams = new FileInputStream("car.txt");
 
        InputStreamReader inputReader = new InputStreamReader(inputStreams, StandardCharsets.UTF_8);
@@ -441,7 +443,7 @@ public class Main {
       }
      } catch (Exception e) {
       throw new RuntimeException(e);
-     }
+     }*/
 
 
      //OutputStreamWriter
@@ -453,7 +455,7 @@ public class Main {
      * Writer soyut sınıfını genişletir.
      * */
 
-     String data1 = "Aaaa";
+     /*String data1 = "Aaaa";
      try {
       FileOutputStream fileOut = new FileOutputStream("out.txt");
       OutputStreamWriter fileWriter = new OutputStreamWriter(fileOut,StandardCharsets.UTF_8);
@@ -462,7 +464,7 @@ public class Main {
       fileOut.close();
      } catch (Exception e) {
       throw new RuntimeException(e);
-     }
+     }*/
 
 
      //FileReader ve FileWriter
@@ -484,7 +486,36 @@ public class Main {
      * * */
 
 
+     // THREADS
+     /*
+     * Java’da herhangi bir uygulamayı çalıştırdığımızda varsayılan olarak ana (main) bir iş parçacığı (Thread) ayağa kaldırılır.
+     *  Bu ana iş parçacığına ek olarak yazılımcılarda alt iş parçacıkları çalıştıralabilir. Bundan zaten bahsetmiştik.
+     * Java’da iş parçacığı oluşturmak için “Thread” isminde bir sınıf bulunmaktadır. Böylece, basit anlamda iş parçacığı açmış oluruz. Tabi, unutmamak lazım Thread açmak sisteme maliyeti olan bir iştir.
+     * Sürekli Thread üretmek kaynak kullanımını olumsuz etkiler. Bu nedenle bu sorunu çözmek Thread Pooling kavramı vardır.
+     * Bu maliyetli nesneler ilk başta belli bir miktarda yaratılır ve hazır durumda olacak şekilde havuza konulur.
+     * Thread ihtiyacı olanlar bu havuzdan bir Thread’i kullanır ve sisteme geri iade eder. Böylece, performans kazancı yanı sıra kaynak kullanımı da iyi bir hale getirilir.
+     * Thread sınıfı ya da Runnable interfacesi kullanarak threadler olusturulabilir.
+     * Thread.currentThread() ile o anda aktif olarak çalışan iş parçacığının referansını alabiliyoruz.
+     * Burada aldığımız Thread nesnesi iş parçacığı içinde çalıştırılan kodu ifade eder.
+     * Thread sınıfı, Runnable interfacesini implemente eder.
+     * Threadi calıstırmak icin start metodu kullanılır.
+     * */
 
+    /* Counter c = new Counter("A Thread");
+     Counter c2 = new Counter("B thread");
+     c.start();
+     c2.start();
+ */
+     CounterRunnable counterRunnable = new CounterRunnable("First Thread");
+     CounterRunnable counterRunnable2 = new CounterRunnable("Second Thread");
+     CounterRunnable counterRunnable3 = new CounterRunnable("Third Thread");
+
+     Thread thread = new Thread(counterRunnable);
+     Thread thread2 = new Thread(counterRunnable2);
+     Thread thread3 = new Thread(counterRunnable3);
+     thread.start();
+     thread2.start();
+     thread3.start();
 
 
     }
