@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {
@@ -506,16 +508,95 @@ public class Main {
      c.start();
      c2.start();
  */
-     CounterRunnable counterRunnable = new CounterRunnable("First Thread");
-     CounterRunnable counterRunnable2 = new CounterRunnable("Second Thread");
-     CounterRunnable counterRunnable3 = new CounterRunnable("Third Thread");
+     CounterRunnable counterRunnable = new CounterRunnable("First Thread",1);
+     //CounterRunnable counterRunnable2 = new CounterRunnable("Second Thread");
+     //CounterRunnable counterRunnable3 = new CounterRunnable("Third Thread");
 
      Thread thread = new Thread(counterRunnable);
-     Thread thread2 = new Thread(counterRunnable2);
-     Thread thread3 = new Thread(counterRunnable3);
+     //Thread thread2 = new Thread(counterRunnable2);
+     //Thread thread3 = new Thread(counterRunnable3);
      thread.start();
-     thread2.start();
-     thread3.start();
+     try {
+      Thread.sleep(2000);
+      counterRunnable.stop();
+     } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+     }
+     //thread2.start();
+     //thread3.start();
+
+
+     //Critical Sections
+     /*
+     * Threadler, veri alabilmek icin bir kaynaga giderler, bunun icin birbirleriyle yarıs halinde olurlar.
+     * Bu duruma race condition adı verilir.
+     * Kaynakta ise bir thread islem yaparken diğerinin beklemesi gerekir.
+     *  Birden fazla threadin birbirini bekleme durumlarına critical section adı verilir.
+     * */
+
+     /*
+     * JOIN ISLEMI
+     * join yapılmadan önce acılan 2 threadin de orderNo=1 idi,
+     * join atınca bagımsız halde calısmalarını saglarız.
+     * Join yöntemi çağrılan iş parçacığı tamamlanana kadar çağıran iş parçacığını (yöntemini çağıran iş parçacığı Join ) engelleyen bir eşitleme yöntemidir.
+     * Ancak join yöntemi ile de bazen duplicate sorunu cozulemiyor.
+     * Bunun icin synchronized kullanılır.
+     * birden çok thread'in aynı anda aynı yöntemi çağırmasını engellemek için synchronized anahtar kelimesini kullanabilirsiniz.
+     *  Bu, bir yöntemin yalnızca bir thread tarafından aynı anda çalıştırılabilmesini sağlar
+     * Duplicate sorunu, 1 thread islem yaparken diger threadin aray girmesi yuzunden olusur.
+     * Bu islem, kritik bolgede gerceklesir.
+     * Join islemi, senkronizasyon problemini tamamen cozmez,bir thread'in bitmesini bekler ve ardından diğer thread'lerin çalışmasına izin verir.
+     * Kritik bolgede, diger thread gelip araya giriyor ve senkron kopuyor.
+     * Bunun icin synchronized gibi senkronlama yöntemleri kullanılır.
+     * */
+
+     Thread t1 = new Thread(new OrderMatic());
+     t1.run();
+     try {
+      t1.join();
+     } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+     }
+
+     Thread t2 = new Thread(new OrderMatic());
+     t2.run();
+     try {
+      t2.join();
+     } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+     }
+
+
+     //VOLATILE
+     /*
+     * Bu önbellekler, ana bellekten veri okuma-yazma hızını minimum seviyeye düşürmek için kullanılmaktadır.
+     * Sık kullanılan değişken değerlerini bu önbellek bölgelerine yerleştirilirler.
+     * Böylece sürekli ana hafızaya giderek zaman kaybetmek yerine daha hızlı işlem görürler.
+     * volatile” anahtar kelimesi ile işaretlenmiş bir değişkenin değerine erişmek gerektiğinde direkt olarak ana hafızadan alınacağını ve ilgili değişkene yazma işlemi uygulanacaksa yine direkt olarak ana hafıza bölgesine yazılacağını belirtilmiş olunur.
+     * */
+
+     //ThreadPooling
+     /*
+     * Bu nedenle Thread havuzu oluşturup bu havuzu önceden oluşturulmuş ve kullanıma hazır Thread nesneleri ile doldururuz.
+     * Böylece, performans kazanımı ve sistem kaynaklarının verimli kullanımını sağlayabiliriz.
+     * */
+     ExecutorService pool = Executors.newFixedThreadPool(10);
+     for(int i=0 ; i<100;i++){
+      pool.execute(OrderMatic::new); //Runnable tipinde bir nesne verilir.
+      //Burada havuzdaki threadler ile 100 islem yapilir.
+     }
+
+     //TYPE CASTING
+     /*
+     * WIDENING CASTING
+     * küçük veri tipini büyük veri tipine dönüştürmek işlemine denir. Otomatik olarak gerçekleşir.
+     *
+     * NARROWING CASTING
+     * büyük veri tipini kücük veri tipine dönüştürmek işlemine denir.
+     * double -> float -> long -> int -> char -> short -> byte
+     *
+     * */
+
 
 
     }
